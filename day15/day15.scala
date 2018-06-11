@@ -26,7 +26,7 @@ def gen(next: BigInt => BigInt, start:BigInt): Stream[BigInt] = {
 
 // comparison function, return one if there's a match
 val last16bits = math.pow(2, 16).toInt
-def judge_equal(tpl:(BigInt, BigInt)):Int = if ((tpl._1 % last16bits) == (tpl._2 % last16bits)) 1 else 0
+def judge_equal(tpl:(BigInt, BigInt)):Boolean = (tpl._1 % last16bits) == (tpl._2 % last16bits)
 
 // build generators
 val genAtest = gen(nextA, testA)
@@ -35,7 +35,7 @@ val genBtest = gen(nextB, testB)
 // count equals over 40m pairs, expected 588
 // crashes with OOM error 
 val num_pairs = 4e7.toInt
-(genAtest zip genBtest) take(num_pairs) map(judge_equal) reduceLeft (_ + _)
+(genAtest zip genBtest) take(num_pairs) filter(judge_equal) length
 
 
 /*******************
@@ -48,8 +48,8 @@ val genB = gen(nextB, inputB)
 
 val first_solution = ((genA zip genB)
                         .take(num_pairs)
-                        .map(judge_equal)
-                        .sum)
+                        .filter(judge_equal)
+                        .length)
              
 print("The soluton to the first puzzle is " + first_solution.toString)
 
@@ -71,8 +71,8 @@ val genBfilter = gen(nextB, inputB) filter (_ % 8 == 0)
 val num_pairs = 5e6.toInt
 val second_solution = ((genAfilter zip genBfilter)
                         .take(num_pairs)
-                        .map(judge_equal)
-                        .sum)
+                        .filter(judge_equal)
+                        .length)
                         
 print("The soluton to the second puzzle is " + second_solution.toString)
 
