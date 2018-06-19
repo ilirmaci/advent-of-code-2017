@@ -29,10 +29,10 @@ if __name__ == '__main__':
     # read input    
     input_raw = open('day18_input.txt').readlines()
     instr = [parse_instruction(x) for x in input_raw]
-
+    
     # define dictionary with the instructions that don't return anything
     cmd2func = {'set':set_, 'add':add, 'mul':mul, 'mod':mod}
-
+    
     # start state variables for both programs
     idx = [0, 0]                            ## instructions index
     stuck = [False, False]                  ## status
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     queue = [deque(), deque()]              ## queue of values sent to program
     sent = [0, 0]                           ## number of values sent by program
     num_instructions = len(instr)           
-
+    
     while (not all(stuck)):
         for prog in range(2):
             ii = idx[prog]
