@@ -18,7 +18,7 @@ class Part(object):
         self.id = index
         self.pos = values_dict['p']
         self.vel = values_dict['v']
-        self.acc = values.dict['a']
+        self.acc = values_dict['a']
     
     def update(self):
         '''Update velocity and position advancing time by one unit'''
