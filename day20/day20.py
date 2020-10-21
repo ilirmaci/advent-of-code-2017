@@ -7,32 +7,30 @@ from day20_class import Part
 
 # read input
 raw_input = open('day20_input.txt').readlines()
-particles = [Part(ii, raw_input[ii]) for ii in xrange(len(raw_input))]
+particles = [Part(ii, raw_input[ii]) for ii in range(len(raw_input))]
 
-####################
-##  First puzzle  ##
-####################
+##################
+#  First puzzle  #
+##################
 
-# hacky solution that relies on some particles having no acceleration
-def no_acc(particle):
-    '''(Part) => bool
-    Return True if acceleration across all dimensions is 0, False otherwise.
+closest_particle = sorted(particles, key=lambda x: x.key())[0]
+print('The answer to the first puzzle is {}'.format(closest_particle.id))
+
+###################
+#  Second puzzle  #
+###################
+
+
+def remove_collisions(particles):
+    '''Return `particles` with the colliding particles removed.
     '''
-    return sum([abs(x) for x in particle.acc]) == 0
-
-candidates = [pp for pp in particles if no_acc(pp)]
-candidate_velocities = [sum([abs(x) for x in pp.vel]) for pp in candidates]
-
-# which candidate has the smallest velocity
-smallest_index = candidate_velocities.index(min(candidate_velocities))
-first_solution = candidates[smallest_index].id
-print('The answer to the first puzzle is {}'.format(first_solution))
-
-#####################
-##  Second puzzle  ##
-#####################
+    # make a summary of all positions and their frequency
+    count = {}
+    for _ in particles:
+        count[_.p] = count.get(_.p, 0) + 1
+    # only return particles with frequency == 1
+    return [_ for _ in particles if count[_.p] == 1]
 
 
 second_solution = 'still nothing'
 print('The answer to the second puzzle is {}'.format(second_solution))
-
