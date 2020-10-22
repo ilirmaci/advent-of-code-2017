@@ -18,9 +18,18 @@ class Part(object):
         line = raw_string.strip()
         values_dict = dict([values(x) for x in line.split(', ')])
         self.id = index
-        self.p = values_dict['p']
-        self.v = values_dict['v']
+        # organize by dimension, s of (a, v, p)
         self.a = values_dict['a']
+        self.v = values_dict['v']
+        self.p = values_dict['p']
+        self.avp = (self.a, self.v, self.p)
+
+    # organize by measurement, tuples of (x, y, z)
+    def xyz(self):
+        x = (self.a[0], self.v[0], self.p[0])
+        y = (self.a[1], self.v[1], self.p[1])
+        z = (self.a[2], self.v[2], self.p[2])
+        return (x, y, z)
 
     def update(self):
         '''Update velocity and position advancing time by one unit'''
@@ -41,10 +50,21 @@ class Part(object):
         '''Return a 3-tuple that can be used to sort particles
         so that the ones ending up closest to the origin come first
         '''
-        result_a = sum(abs(_) for _ in self.a)
-        result_v = sum(abs(_) for _ in self.v)
-        result_p = sum(abs(_) for _ in self.p)
-        return (result_a, result_v, result_p)
+        result = tuple(sum(abs(_) for _ in mag) for mag in self.avp)
+        return result
+
+    def direction(self, dim):
+        '''Return -1 if all magnitudes (acceleration, velocity, position)
+        for dimension `dim` are on the negative side of the origin,
+        +1 if they are all on the positive side, and 0 if they are not
+        pointing in the same direction.
+        '''
+        current_dim = self.xyz()[dim]
+        if (min(current_dim) <= 0) and (max(current_dim) <= 0):
+            return -1
+        if (min(current_dim) >= 0) and (max(current_dim) >= 0):
+            return 1
+        return 0
 
     def can_collide(self, other):
         '''Return True if collision with `other` is still possible'''
