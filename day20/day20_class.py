@@ -33,3 +33,14 @@ class Part(object):
     def distance(self, other):
         '''Return L1 distance from `other` particle'''
         return sum([abs(x - y) for x, y in zip(self.pos, other.pos)])
+    
+    def can_collide(self, other):
+        '''Return True if collision with `other` is still possible'''
+        # if particles are definitely diverging on any dimension
+        # return False
+        for dim in range(3):
+            if (self.acc[dim] > other.acc[dim]) and (self.vel[dim] > other.vel[dim]) and (self.pos[dim] > other.pos[dim]):
+                return False
+            elif (self.acc[dim] < other.acc[dim]) and (self.vel[dim] < other.vel[dim]) and (self.pos[dim] < other.pos[dim]):
+                return False
+        return True
